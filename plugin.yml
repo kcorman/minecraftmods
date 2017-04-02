@@ -1,0 +1,4 @@
+name: SpookCraftPlugin
+main: core.SpookCraftPlugin
+version: 1.0
+commands:
