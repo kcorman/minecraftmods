@@ -7,13 +7,17 @@ import java.util.concurrent.TimeUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Enderman;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MyListener implements Listener{
+	private int total = 0;
 	ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -22,20 +26,25 @@ public class MyListener implements Listener{
     
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-    	if(Math.random() > .5) {
-    		Location oldLoc = event.getBlock().getState().getLocation();
-    		Location newLoc = oldLoc.add(0, 4, 0);
-    		event.getPlayer().teleport(event.getPlayer().getLocation().add(0, 4, 0));
-    		// newLoc.getBlock().setType(Material.GRAVEL);
+    	total = 0;
+    	if(Math.random() > .9){
     		event.setCancelled(true);
-    		for(int i = 0;i<4;i++) {
-    			Enderman em = event.getPlayer().getWorld().spawn(newLoc.add(0, i, i), Enderman.class);
-        		exec.schedule(() -> {
-        			em.damage(em.getHealth());
-        		}, 3, TimeUnit.SECONDS);
-    		}
-    		
-    		
+    		event.getBlock().setType(Material.FIRE);
+    		final Location loc = event.getBlock().getLocation();
+    		int x = loc.getBlockX(); int y = loc.getBlockY(); int z = loc.getBlockZ();
+    		final World world = event.getBlock().getWorld();
+    		Bukkit.broadcastMessage("World = " + world);
+    		BukkitRunnable runnable = new BukkitRunnable() {
+				
+				@Override
+				public void run() {
+	    			Bukkit.broadcastMessage("World = " + world);
+	        		world.createExplosion(x, y, z, 10, true, true);
+				}
+			};
+			runnable.runTaskLater(SpookCraftPlugin.plugin, 60);
     	}
+
     }
+
 }
