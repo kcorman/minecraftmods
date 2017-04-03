@@ -8,16 +8,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Enderman;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class MyListener implements Listener{
 	private int total = 0;
+	private Block current = null;
 	ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -45,6 +49,22 @@ public class MyListener implements Listener{
 			runnable.runTaskLater(SpookCraftPlugin.plugin, 60);
     	}
 
+    }
+    
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent pme) {
+    	/*Block b = pme.getFrom().getBlock();
+    	if(null != current) {
+    		if(!current.equals(b)) {
+    			new Location(current.getWorld(), current.getX(), current.getY() - 1, current.getZ()).getBlock().setType(Material.GLOWSTONE);
+    		}
+    	}
+    	current = b;*/
+    }
+    
+    @EventHandler
+    public void onEntityMove(EntityChangeBlockEvent e) {
+    	
     }
 
 }
