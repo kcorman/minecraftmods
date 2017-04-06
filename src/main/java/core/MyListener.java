@@ -1,10 +1,12 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -13,12 +15,19 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class MyListener implements Listener{
@@ -29,6 +38,20 @@ public class MyListener implements Listener{
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
     	Bukkit.broadcastMessage("Welcome to the server!");
+    }
+    
+    @EventHandler
+    public void onPlayerEggThrow(PlayerEggThrowEvent event) {
+    	// Bukkit.broadcastMessage("Unleashed entity " + event.getEgg().getName() + ", loc = " + event.getEgg().getLocation());
+    	Location loc = event.getEgg().getLocation();
+    	Collection<Entity> entities = loc.getWorld().getNearbyEntities(loc, 50, 50, 50);
+    	Optional<Entity> zombie = entities.stream().filter(e -> e.getType() == EntityType.ZOMBIE && !e.isDead() && e.).findFirst();
+    	Optional<Entity> enderman = entities.stream().filter(e -> e.getType() == EntityType.ENDERMAN).findFirst();
+    	if(zombie.isPresent() && enderman.isPresent()) {
+        	Bukkit.broadcastMessage("Zombie = " + zombie.get() + ", enderman = " + enderman.get());
+        	Zombie z = (Zombie) zombie.get();
+        	z.setTarget((Enderman)enderman.get());
+    	}
     }
     
     @EventHandler
@@ -59,7 +82,7 @@ public class MyListener implements Listener{
     	Block b = pme.getFrom().getBlock();
     	if(null != current) {
     		if(!current.equals(b)) {
-    			onBlockChange(b, current);
+    			// onBlockChange(b, current);
     		}
     	}
     	current = b;
