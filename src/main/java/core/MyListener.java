@@ -45,7 +45,7 @@ public class MyListener implements Listener{
     	// Bukkit.broadcastMessage("Unleashed entity " + event.getEgg().getName() + ", loc = " + event.getEgg().getLocation());
     	Location loc = event.getEgg().getLocation();
     	Collection<Entity> entities = loc.getWorld().getNearbyEntities(loc, 50, 50, 50);
-    	Optional<Entity> zombie = entities.stream().filter(e -> e.getType() == EntityType.ZOMBIE && !e.isDead() && e.).findFirst();
+    	Optional<Entity> zombie = entities.stream().filter(e -> e.getType() == EntityType.ZOMBIE && !e.isDead()).findFirst();
     	Optional<Entity> enderman = entities.stream().filter(e -> e.getType() == EntityType.ENDERMAN).findFirst();
     	if(zombie.isPresent() && enderman.isPresent()) {
         	Bukkit.broadcastMessage("Zombie = " + zombie.get() + ", enderman = " + enderman.get());
@@ -57,7 +57,7 @@ public class MyListener implements Listener{
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
     	total = 0;
-    	if(Math.random() > .9){
+    	/*if(Math.random() > .9){
     		event.setCancelled(true);
     		event.getBlock().setType(Material.FIRE);
     		final Location loc = event.getBlock().getLocation();
@@ -73,7 +73,7 @@ public class MyListener implements Listener{
 				}
 			};
 			runnable.runTaskLater(SpookCraftPlugin.plugin, 60);
-    	}
+    	}*/
 
     }
     
