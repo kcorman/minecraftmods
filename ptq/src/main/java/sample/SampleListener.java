@@ -3,6 +3,7 @@ package sample;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -12,7 +13,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class SampleListener implements Listener {
 	private Set<Chunk> conqueredChunks = new HashSet<>();
-    @EventHandler
+  /*  @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
     	// check if player is leaving current chunk
     	Chunk newChunk = e.getTo().getChunk();
@@ -24,10 +25,12 @@ public class SampleListener implements Listener {
     			e.setCancelled(true);
     		}
     	}
-    }
+    }*/
     
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
+		Bukkit.broadcastMessage("Block placed PTQ");
+
     	if(e.getBlock().getType() == Material.TORCH) {
     		conqueredChunks.add(e.getBlock().getChunk());
     	}
